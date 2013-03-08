@@ -16,5 +16,18 @@
 			<textfield bind="name" />
 			<media:image-upload bind="image" />
 		</form>
+		
+		<form id="modelFileForm" bean-class="de.neteye.riot.file.model.FileModel">
+			<textfield bind="name" required="true" />
+		</form>
+	
+		<form id="fileFilter" bean-class="java.util.HashMap">
+			<textfield bind="name" />
+		</form>	
+	
+	
+		<form id="nestedFileForm" bean-class="java.io.File">
+			<textfield bind="name" required="true" />
+		</form>
 
 </form-config>

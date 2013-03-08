@@ -27,6 +27,10 @@
 		<bean class="org.riotfamily.core.screen.list.command.impl.AddCommand" />
 	</util:list>
 	
+	<bean id="fileFileFilter" class="de.neteye.riot.file.filter.FileFileFilter" />
+
+	<bean id="directoryFileFilter" class="de.neteye.riot.file.filter.DirectoryFileFilter" />
+	
 	<override:add ref="rootScreens">
 		<ref bean="sitemaps" />
 		<s:list id="pets">
@@ -56,6 +60,53 @@
 				</bean>
 			</s:screenlets>
 		</s:list>
+		<s:multi-list id="fileBrowser" icon="application_side_tree">
+			<s:list id="folderTree" label-property="name" icon="application_side_tree"><!-- controlList -->
+				<s:dao>
+					<bean class="de.neteye.riot.file.dao.ModelFileRootNodeTreeDao">
+						<property name="root" value="file://${fileBrowser.root=#{systemProperties['user.home']}}" />
+						<property name="rootDao">
+							<bean class="de.neteye.riot.file.dao.ModelFileDao">
+								<property name="fileFilter" ref="directoryFileFilter" />
+							</bean>
+						</property>
+						<property name="nodeDao">
+							<bean class="de.neteye.riot.file.dao.ModelFileNodeDao">
+								<property name="fileFilter" ref="directoryFileFilter" />
+							</bean>
+						</property>
+					</bean>
+				</s:dao>
+				<s:columns>
+					<s:column>
+						<bean class="de.neteye.riot.file.renderer.ModelFileTreeRenderer" />
+					</s:column>
+					<!--<s:column property="lastModified" />-->
+				</s:columns>
+				<s:commands>
+				</s:commands>
+			</s:list>
+
+			<s:list id="fileList" label-property="name" icon="application_side_tree" filter-form="fileFilter"><!-- mainList -->
+				<s:dao>
+					<bean class="de.neteye.riot.file.dao.ModelFileDao">
+						<property name="root" value="file://${fileBrowser.root=#{systemProperties['user.home']}}" />
+					</bean>
+				</s:dao>
+				<s:columns>
+					<s:column>
+						<bean class="de.neteye.riot.file.renderer.ModelFileTreeRenderer" />
+					</s:column>
+					<s:column property="lastModified" />
+				</s:columns>
+				<s:commands>
+					<bean class="de.neteye.riot.file.commands.GoIntoFolderCommand" />
+					<bean class="org.riotfamily.core.screen.list.command.impl.EditCommand" />
+				</s:commands>
+				<s:form id="modelFileForm"></s:form>
+			</s:list>
+
+		</s:multi-list>
 	</override:add>
 	 
 </beans>
